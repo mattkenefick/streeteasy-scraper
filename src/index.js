@@ -49,9 +49,9 @@ app.get('/', async (req, res) => {
 		const url = new URL(req.query.url);
 		// const url = 'https://streeteasy.com/building/180-montague/18e';
 		const content = await scrape(url);
-		const images = content.images.join(',');
+		const images = content.images.join('","');
 
-		const csv = `"${content.price}","${content.placename}","${content.hasDishwasher}","${content.hasDogs}","${content.hasFios},${images}"`
+		const csv = `"${content.price}","${content.placename}","${content.hasDishwasher}","${content.hasDogs}","${content.hasFios}","${images}"`
 
 		res.send(csv);
 	}
