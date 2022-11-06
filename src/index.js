@@ -26,11 +26,17 @@ async function scrape(url) {
 	const hasDogs = !!body.match(/"dogs"/gmi);
 	const hasFios = !!body.match(/"fios_available"/gmi);
 
+	const images = (body.match(/"image_src" content="([^"]+)"/gmi) || []).slice(0, 3).map(item => {
+		return item.substring('"image_src" content="'.length, item.length - 1);
+	});
+
 	return {
 		hasDishwasher,
 		hasDogs,
 		hasFios,
-		placename, price
+		images,
+		placename,
+		price
 	}
 }
 
@@ -43,10 +49,9 @@ app.get('/', async (req, res) => {
 		const url = new URL(req.query.url);
 		// const url = 'https://streeteasy.com/building/180-montague/18e';
 		const content = await scrape(url);
+		const images = content.images.join(',');
 
-		console.log(content);
-
-		const csv = `"${content.price}","${content.placename}","${content.hasDishwasher}","${content.hasDogs}","${content.hasFios}"`
+		const csv = `"${content.price}","${content.placename}","${content.hasDishwasher}","${content.hasDogs}","${content.hasFios},${images}"`
 
 		res.send(csv);
 	}
