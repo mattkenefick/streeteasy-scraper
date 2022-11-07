@@ -22,7 +22,7 @@ async function scrape(url) {
 	const prices = body.match(/priced at \$(?<price>[\d\,]+)/).groups;
 	const price = prices.price;
 
-	const inContract = !!body.match(/"in contract"/gmi) || !!body.match(/off market/gmi) || !!body.innerText.match(/delisted\s+today/gmi);
+	const inContract = !!body.match(/"in contract"/gmi) || !!body.match(/off market/gmi) || !!body.match(/delisted(.*?)today/gmis);
 
 	const hasDishwasher = !!body.match(/"dishwasher"/gmi);
 	const hasDogs = !!body.match(/"dogs"/gmi);
