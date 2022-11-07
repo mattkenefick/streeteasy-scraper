@@ -22,6 +22,8 @@ async function scrape(url) {
 	const prices = body.match(/priced at \$(?<price>[\d\,]+)/).groups;
 	const price = prices.price;
 
+	const inContract = !!body.match(/"in contract"/gmi) || !!body.match(/off market/gmi);
+
 	const hasDishwasher = !!body.match(/"dishwasher"/gmi);
 	const hasDogs = !!body.match(/"dogs"/gmi);
 	const hasFios = !!body.match(/"fios_available"/gmi);
@@ -34,6 +36,7 @@ async function scrape(url) {
 		hasDishwasher,
 		hasDogs,
 		hasFios,
+		inContract,
 		images,
 		placename,
 		price
@@ -49,9 +52,9 @@ app.get('/', async (req, res) => {
 		const url = new URL(req.query.url);
 		// const url = 'https://streeteasy.com/building/180-montague/18e';
 		const content = await scrape(url);
-		const images = content.images.join('","');
+		// const images = content.images.join('","');
 
-		const csv = `"${content.price}","${content.placename}","${content.hasDishwasher}","${content.hasDogs}","${content.hasFios}","${images}"`
+		const csv = `"${content.price}","${content.placename}","${content.hasDishwasher}","${content.hasDogs}","${content.hasFios}","${content.inContract}"`
 
 		res.send(csv);
 	}
